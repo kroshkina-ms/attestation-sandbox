@@ -1,4 +1,4 @@
-#include <options.h>
+#include <options.hpp>
 
 #include <functional>
 #include <iostream>
@@ -92,7 +92,7 @@ void Options::set_debuggable(const std::string& v) {
     this->debuggable = !v.empty(); //TODO: fix me
 }
 
-void Options::help_and_exit(const std::string& v) {
+void Options::help_and_exit(const std::string&) {
     std::cout << std::endl;
     std::cout << "Usage: maavalidatejwt [options] file" << std::endl;
     std::cout << std::endl;

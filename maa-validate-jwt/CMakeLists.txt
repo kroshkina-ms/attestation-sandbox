@@ -13,7 +13,7 @@ elseif(CMAKE_HOST_UNIX)
 endif()
 
 set(SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/options.cpp ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp)
-set(HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/include/options.h)
+set(HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/include/ascii_escape_code.hpp ${CMAKE_CURRENT_SOURCE_DIR}/include/options.hpp ${CMAKE_CURRENT_SOURCE_DIR}/include/base64.hpp)
 add_executable(maa-validate-jwt ${SOURCES} ${HEADERS})
 target_include_directories(maa-validate-jwt PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 

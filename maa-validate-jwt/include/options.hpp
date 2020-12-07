@@ -6,7 +6,8 @@
 
 class Options
 {
-private:
+//private:
+public:
     typedef void (Options::* OptionsMemFn)(const std::string&);
 
     bool is_verbose;
@@ -17,9 +18,9 @@ private:
     std::string svn;
     bool debuggable;
 
-    Options();
+    //Options();
 
-public:
+//public:
 
     explicit Options(const std::vector<std::string>& args);
     void maybe_dump() const;

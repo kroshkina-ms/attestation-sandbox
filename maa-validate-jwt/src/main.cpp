@@ -13,6 +13,9 @@
 #include <base64.hpp>
 #include <regex>
 
+
+#include <curl/curl.h> 
+
 // PArse JSON - for this sample no need to fully parse JSON, this sample is meant to show token validation, while using limited number of third-party libraries
 
 // utils
@@ -62,7 +65,7 @@ private:
             std::cout << "Empty decoded JWT header, cannot retrieve 'jku' token" << std::endl;
             return "";
         }
-        std::regex rgx(".*[jJ][kK][uU] *\" *: *\" *([0-9a-zA-Z\:\/\.]*)");
+        std::regex rgx(".*[jJ][kK][uU][ ]*\"[ ]*:[ ]*\"[ ]*([0-9a-zA-Z:/.]*)");
         std::smatch match;
         std::string result = (std::regex_search(decoded_header.begin(), decoded_header.end(), match, rgx)) ? std::string(match[1]) : "";
         return result;
@@ -73,7 +76,7 @@ private:
             std::cout << "Empty decoded JWT header, cannot retrieve 'kid' token" << std::endl;
             return "";
         }
-        std::regex rgx(".*[kK][iI][dD] *\" *: *\" *([0-9a-zA-Z=]*)");
+        std::regex rgx(".*[kK][iI][dD][ ]*\"[ ]*:[ ]*\"[ ]*([0-9a-zA-Z=]*)");
         std::smatch match;
         std::string result = (std::regex_search(decoded_header.begin(), decoded_header.end(), match, rgx)) ? std::string(match[1]) : "";
         return result;
@@ -84,7 +87,7 @@ private:
             std::cout << "Empty decoded JWT header, cannot retrieve attest DNS" << std::endl;
             return "";
         }
-        std::regex rgx("https:\/\/([0-9a-zA-Z\.]*)");
+        std::regex rgx("https://([0-9a-zA-Z.]*)");
         std::smatch match;
         std::string result = (std::regex_search(decoded_header.begin(), decoded_header.end(), match, rgx)) ? std::string(match[1]) : "";
         return result;
@@ -126,6 +129,39 @@ int main(int argc, char* argv[], char* envp[]) {
     infile.close();
 
     JwtMaster jwt(maybe_encoded_tokens[0]);
+
+    CURL* curl;
+    CURLcode res;
+    curl_global_init(CURL_GLOBAL_DEFAULT);
+    curl = curl_easy_init();
+    // https://curl.se/libcurl/c/httpcustomheader.html
+    // https://curl.se/libcurl/c/https.html
+    if (curl) {
+        curl_easy_setopt(curl, CURLOPT_URL, jwt.jku.c_str());
+        
+        struct curl_slist* chunk = NULL;
+        std::string header = std::string("tenantName: ") + ((jwt.tenant.size() > 24) ? jwt.tenant.substr(0, 24) : jwt.tenant);
+        chunk = curl_slist_append(chunk, header.c_str());
+        curl_easy_setopt(curl, CURLOPT_HTTPHEADER, chunk);
+        curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
+        curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
+        curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
+        curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
+
+        res = curl_easy_perform(curl);
+        // TODO: received code 56 - figure out what the heck is going on
+        /* Check for errors */
+        if (res != CURLE_OK)
+            fprintf(stderr, "curl_easy_perform() failed: %s\n",
+                curl_easy_strerror(res));
+
+        curl_easy_cleanup(curl);
+        curl_slist_free_all(chunk);
+    }
+    curl_global_cleanup();
+
+    //  curl --location --request GET 'https://shareduks.uks.attest.azure.net:443/certs' --header 'tenantName: shareduks'
+    //  curl --location --request GET 'https://shareduks.uks.attest.azure.net/certs' --header 'tenantName: shareduks'
 
     std::cout << jwt.decoded_header << std::endl;
     // Call certs

@@ -220,7 +220,7 @@ WriteMemoryCallback(void* contents, size_t size, size_t nmemb, void* userp)
     return realsize;
 }
 
-int main(int argc, char* argv[], char* envp[]) {
+int main(int argc, char* argv[]) {
     std::vector<std::string> argvec(argc, "");
     for (int count = 0; count < argc; count++) argvec[count] = argv[count];
     Options opts(argvec);

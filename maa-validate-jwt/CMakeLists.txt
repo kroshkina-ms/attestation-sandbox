@@ -9,8 +9,6 @@ project(maa-validate-jwt)
 if(CMAKE_HOST_WIN32)
     set(WINDOWS 1)
     set(VCPKG_PATH "C:/src/vcpkg/installed/x64-windows") # TODO: combine this steps with the build script
-    #set(ZLIB_ROOT ${VCPKG_PATH})
-    #set(CURL_DIR ${VCPKG_PATH}/share/curl)
     find_package(ZLIB REQUIRED)
     find_package(CURL CONFIG REQUIRED)
 elseif(CMAKE_HOST_UNIX)
@@ -29,6 +27,8 @@ target_include_directories(maa-validate-jwt PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/
 
 if(WINDOWS)
     set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT maa-validate-jwt)
-#elseif(LINUX)
+    target_compile_options(maa-validate-jwt PRIVATE /W4 /WX)
+elseif(LINUX)
+    target_compile_options(maa-validate-jwt PRIVATE -Wall -Wextra -pedantic -Werror)
 endif()
 

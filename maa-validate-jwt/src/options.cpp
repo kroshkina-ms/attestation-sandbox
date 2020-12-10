@@ -5,7 +5,7 @@
 
 namespace mvj {
     static void tolower(std::string& in) {
-        std::transform(in.begin(), in.end(), in.begin(), [](unsigned char c) { return std::tolower(c); });
+        std::transform(in.begin(), in.end(), in.begin(), [](int c) { return static_cast<char>(std::tolower(c)); });
     }
 }
 
@@ -82,7 +82,7 @@ void Options::init() {
     this->debuggable = false;
 }
 
-void Options::set_verbose(const std::string& v) { this->is_verbose = true; }
+void Options::set_verbose(const std::string&) { this->is_verbose = true; }
 void Options::set_jwt_filename(const std::string& v) { this->jwt_filename = v; }
 void Options::set_mrsigner(const std::string& v) { this->mrsigner = v; }
 void Options::set_productid(const std::string& v) { this->productid = v; }

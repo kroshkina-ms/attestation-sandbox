@@ -8,7 +8,9 @@ If((Test-Path $out))
 }
 New-Item -ItemType Directory -Force -Path $out
 cd $out 
-cmake ..\
+# TODO: set vcpkg up
+cmake ..\ -DCMAKE_TOOLCHAIN_FILE=C:/src/vcpkg/scripts/buildsystems/vcpkg.cmake
+#cmake ..\
 
 $msbuildpath=$Args[0]
 

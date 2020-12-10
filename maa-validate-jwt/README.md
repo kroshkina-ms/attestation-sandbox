@@ -12,6 +12,8 @@ External sources:
 cURL lib:
 * https://github.com/curl/curl/blob/master/docs/INSTALL.md#building-using-vcpkg
 * https://github.com/Microsoft/vcpkg/#examples
+*  .\vcpkg.exe install curl[core,openssl]:x64-windows  --recurse
+
 ```
 .\vcpkg.exe install curl:x64-windows
 ```

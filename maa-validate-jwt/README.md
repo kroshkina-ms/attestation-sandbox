@@ -22,8 +22,11 @@ cURL lib:
 #### Prerequisites
 - [ ] Install cmake https://cmake.org/install/
 - [ ] VS tools
-- [ ] Install `libcurl` https://github.com/curl/curl/blob/master/docs/INSTALL.md#building-using-vcpkg
-
+- [ ] Get the repo `git clone --recursive git@github.com:olkroshk/attestation-sandbox.git`
+- [ ] Set up environment and install the dependencies:
+	- [ ] Change into the `./vcpkg` submodule directory and build `vcpkg` packager: `.\bootstrap-vcpkg.bat`
+	- [ ] Integrate `vcpkg` into the build environment: `.\vcpkg.exe integrate install`
+	- [ ] Install the project's dependencies: `.\vcpkg.exe install curl[openssl] zlib openssl --triplet x64-windows`
 
 #### Build and Run
 ```

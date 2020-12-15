@@ -1,5 +1,21 @@
 cmake_minimum_required(VERSION 3.6.0)
 
+if(CMAKE_HOST_WIN32)
+    set(WINDOWS 1)
+elseif(CMAKE_HOST_UNIX)
+    set(LINUX 1)
+endif()
+
+if(WINDOWS)
+    file(TO_CMAKE_PATH $ENV{LOCAL_ROOT} LOCAL_ROOT)
+    set(VCPKG_ROOT "${LOCAL_ROOT}/vcpkg")
+    set(CMAKE_TOOLCHAIN_FILE "${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake" CACHE STRING "")
+    set(VCPKG_TARGET_TRIPLET "x64-windows" CACHE STRING "")
+    message(STATUS " >>> Using local root: ${LOCAL_ROOT}.")
+    message(STATUS " >>> Using toolchain file: ${CMAKE_TOOLCHAIN_FILE}.")
+endif()
+
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -7,17 +23,12 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 project(maa-validate-jwt)
 
 find_package(OpenSSL REQUIRED)
-
-if(CMAKE_HOST_WIN32)
-    set(WINDOWS 1)
-    set(VCPKG_PATH "C:/src/vcpkg/installed/x64-windows") # TODO: combine this steps with the build script
+if(WINDOWS)
     find_package(ZLIB REQUIRED)
     find_package(CURL CONFIG REQUIRED)
-elseif(CMAKE_HOST_UNIX)
-    set(LINUX 1)
+elseif(LUNUX)
     find_package(CURL REQUIRED)
 endif()
-
 
 set(SOURCES
 	${CMAKE_CURRENT_SOURCE_DIR}/src/context.cpp

@@ -117,27 +117,4 @@ namespace base64
 		return decoded;
 	}
 
-	// Inspired by https://github.com/krypted/jwttools/blob/beee363ed91085f18b918098ca889d0f13fa4fc9/Jwt/Jwt/jwt/base64.hpp#L301 
-	std::string uri_decode(const std::string& data)
-	{
-		const size_t sz = data.size();
-		const size_t padding = 4 * static_cast<size_t>(sz % 4 != 0) - (sz % 4);
-		std::string uri_dec(sz + padding, '=');
-		for (size_t i = 0; i < sz; ++i)
-		{
-			switch (data[i]) {
-			case '-':
-				uri_dec[i] = '+';
-				break;
-			case '_':
-				uri_dec[i] = '/';
-				break;
-			default:
-				uri_dec[i] = data[i];
-			};
-		}
-		auto decoded = decode(uri_dec);
-		std::string decoded_str(begin(decoded), end(decoded));
-		return decoded_str;
-	}
 }

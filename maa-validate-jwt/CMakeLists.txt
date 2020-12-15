@@ -6,6 +6,8 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 project(maa-validate-jwt)
 
+find_package(OpenSSL REQUIRED)
+
 if(CMAKE_HOST_WIN32)
     set(WINDOWS 1)
     set(VCPKG_PATH "C:/src/vcpkg/installed/x64-windows") # TODO: combine this steps with the build script
@@ -17,11 +19,30 @@ elseif(CMAKE_HOST_UNIX)
 endif()
 
 
-set(SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/options.cpp ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp)
-set(HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/include/ascii_escape_code.hpp ${CMAKE_CURRENT_SOURCE_DIR}/include/options.hpp ${CMAKE_CURRENT_SOURCE_DIR}/include/base64.hpp)
+set(SOURCES
+	${CMAKE_CURRENT_SOURCE_DIR}/src/context.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/curl.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/jwks.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/jwt.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/utils.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/x509.cpp
+)
+
+set(HEADERS 
+	${CMAKE_CURRENT_SOURCE_DIR}/include/ascii_escape_code.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/include/base64.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/include/context.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/include/curl.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/include/jwks.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/include/jwt.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/include/utils.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/include/x509.hpp
+)
 
 add_executable(maa-validate-jwt ${SOURCES} ${HEADERS})
 
+target_link_libraries(maa-validate-jwt PRIVATE OpenSSL::SSL OpenSSL::Crypto)
 target_link_libraries(maa-validate-jwt PRIVATE CURL::libcurl)
 target_include_directories(maa-validate-jwt PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 

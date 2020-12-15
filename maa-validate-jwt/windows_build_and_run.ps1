@@ -7,10 +7,11 @@ If((Test-Path $out))
     Remove-Item $out -Force -Recurse
 }
 New-Item -ItemType Directory -Force -Path $out
+$Env:LOCAL_ROOT=(Split-Path $(Get-Location) -Parent)
+
 cd $out 
-# TODO: set vcpkg up
-cmake ..\ -DCMAKE_TOOLCHAIN_FILE=C:/src/vcpkg/scripts/buildsystems/vcpkg.cmake
-#cmake ..\
+
+cmake ..\
 
 $msbuildpath=$Args[0]
 

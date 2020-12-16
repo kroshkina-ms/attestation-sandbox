@@ -2,6 +2,8 @@
 
 #include <context.hpp>
 #include <regex>
+#include <iostream>
+#include <fstream>
 
 namespace mvj::json {
 
@@ -50,4 +52,34 @@ namespace mvj::strings {
         std::transform(in.begin(), in.end(), in.begin(), [](int c) { return static_cast<char>(std::tolower(c)); });
     }
 
+}
+
+namespace mvj::file {
+    bool get_lines(const std::string& filename, std::vector<std::string>& out) {
+        if (filename.empty()) {
+            Context::log("Faile name is empty, exiting");
+            return false;
+        }
+        out.clear();
+        std::ifstream infile;
+        infile.open(filename);
+        if (infile) {
+            while (!infile.eof())
+            {
+                std::string line;
+                getline(infile, line);
+                out.push_back(line);
+            }
+            infile.close();
+            if (out.empty()) {
+                Context::log("Could not find any record in file: " + filename);
+                return false;
+            }
+        }
+        else {
+            Context::log("Failed to open file: " + filename);
+            return false;
+        }
+        return true;
+    }
 }

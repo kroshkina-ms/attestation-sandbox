@@ -7,26 +7,35 @@
 
 namespace mvj {
 
-    Jwt::Jwt(const std::string& token) : encoded_token_(token) {
-        std::vector<std::string> hps; // hps = header, payload, signature
-        strings::split(token, "\\.", hps);
-
-        if (hps.size() != 3) {
-            Context::log("Invalid token!");
-            return;
+    Jwt::Jwt() {}
+        
+    bool Jwt::deserialize(const std::string& token) {
+        try {
+            encoded_token_ = token;
+            // hps = header, payload, signature
+            std::vector<std::string> hps; 
+            strings::split(token, "\\.", hps);
+    
+            if (hps.size() != 3) {
+                throw std::runtime_error("Invalid token!");
+            }
+            encoded_header_ = hps[0];
+            encoded_payload_ = hps[1];
+            encoded_signature_ = hps[2];
+    
+            decoded_header_ = decode(encoded_header_);
+            decoded_payload_ = decode(encoded_payload_);
+    
+            jku_ = json::get_value(decoded_header_, "jku");
+            kid_ = json::get_value(decoded_header_, "kid");
+            attest_dns_ = parse_dns();
+            tenant_ = parse_tenant();
         }
-
-        encoded_header_ = hps[0];
-        encoded_payload_ = hps[1];
-        encoded_signature_ = hps[2];
-
-        decoded_header_ = decode(encoded_header_);
-        decoded_payload_ = decode(encoded_payload_);
-
-        jku_ = json::get_value(decoded_header_, "jku");
-        kid_ = json::get_value(decoded_header_, "kid");
-        attest_dns_ = parse_dns();
-        tenant_ = parse_tenant();
+        catch (const char* ex) {
+            Context::log("Failed to deserialize JWT, exception: " + std::string(ex));
+            return false;
+        }
+        return true;
     }
 
     std::string Jwt::get_jku() const { return jku_; }

@@ -21,14 +21,16 @@ namespace mvj {
         }
     }
     
-    std::vector<std::string> Jwks::get_certs(const std::string& key) const {
+    bool Jwks::get_certs(const std::string& key, std::vector<std::string>& certs) const {
+        certs.clear();
         auto it = keys_.find(key);
         if (it != keys_.end()) {
-            return it->second.x5c;
+            certs = it->second.x5c;
+            return true;
         }
         else {
-            Context::log("Failed to find key " + key);
-            return std::vector<std::string>();
+            Context::log("Could not find key: " + key);
+            return false;
         }
     }
 

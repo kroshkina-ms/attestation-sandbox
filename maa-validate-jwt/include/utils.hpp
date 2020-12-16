@@ -14,3 +14,7 @@ namespace mvj::strings {
     void remove_spaces(std::string& str);
     void tolower(std::string& in);
 }
+
+namespace mvj::file {
+    bool get_lines(const std::string& filename, std::vector<std::string>& out);
+}

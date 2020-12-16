@@ -10,7 +10,7 @@ namespace mvj {
     typedef void (Context::* ContextMemFn)(const std::string&);
 
     Context::Context() {
-        this->is_verbose_ = false;
+        this->is_verbose_ = true;// false;
         this->jwt_filename_ = "";
         this->mrsigner_ = "";
         this->productid_ = "";

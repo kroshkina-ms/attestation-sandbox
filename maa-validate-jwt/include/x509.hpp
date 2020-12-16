@@ -1,5 +1,35 @@
 #pragma once
 
+#include <string>
+#include <memory>
+#include <openssl/bio.h>
+#include <openssl/x509.h>
+#include <openssl/pem.h>
+
+namespace mvj {
+
+    using BIO_ptr = std::unique_ptr<BIO, decltype(&BIO_free)>;
+    using X509_ptr = std::unique_ptr<X509, decltype(&X509_free)>;
+    using ASN1_TIME_ptr = std::unique_ptr<ASN1_TIME, decltype(&ASN1_STRING_free)>;
+
+    class X509Cert {
+        X509_ptr cert_;
+
+    //    BIO_ptr bio_ptr_;
+    //    X509_ptr x509_ptr_;
+
+    public:
+        X509Cert();
+        ~X509Cert();
+
+        bool deserialize(const std::string& cert_content);
+    
+    private:
+        void init();
+        void clear();
+    };
+}
+
 // x509 stuff
 
 
@@ -377,6 +407,9 @@
 //}
 //
 //// Smart pointers to wrap openssl C types that need explicit free
+
+
+/*
 using BIO_ptr = std::unique_ptr<BIO, decltype(&BIO_free)>;
 using X509_ptr = std::unique_ptr<X509, decltype(&X509_free)>;
 using ASN1_TIME_ptr = std::unique_ptr<ASN1_TIME, decltype(&ASN1_STRING_free)>;
@@ -398,5 +431,7 @@ std::string bio_to_string(const BIO_ptr& bio)
 }
 
 #define PUBKEY_ALGO_LEN 64
-
+*/
 // END OF X.509 stuff
+
+

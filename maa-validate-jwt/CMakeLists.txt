@@ -11,10 +11,7 @@ if(WINDOWS)
     set(VCPKG_ROOT "${LOCAL_ROOT}/vcpkg")
     set(CMAKE_TOOLCHAIN_FILE "${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake" CACHE STRING "")
     set(VCPKG_TARGET_TRIPLET "x64-windows" CACHE STRING "")
-    message(STATUS " >>> Using local root: ${LOCAL_ROOT}.")
-    message(STATUS " >>> Using toolchain file: ${CMAKE_TOOLCHAIN_FILE}.")
 endif()
-
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -63,4 +60,3 @@ if(WINDOWS)
 elseif(LINUX)
     target_compile_options(maa-validate-jwt PRIVATE -Wall -Wextra -pedantic -Werror)
 endif()
-

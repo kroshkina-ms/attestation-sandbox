@@ -14,13 +14,14 @@ namespace mvj {
         std::string decoded_header_;
         std::string decoded_payload_;
 
-        std::string jku_; // TODO olga write me
-        std::string kid_; // TODO olga write description
+        std::string jku_;
+        std::string kid_;
         std::string attest_dns_;
         std::string tenant_;
 
     public:
-        Jwt(const std::string& token);
+        Jwt();
+        bool deserialize(const std::string& token);
 
         std::string get_jku() const;
         std::string get_tenant() const;

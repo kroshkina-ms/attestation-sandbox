@@ -1,33 +1,15 @@
 ## References 
 
-The code in this directory is copied/pasted and reimplemented from:
+The code in this directory borrows some logic and copied/pasted from:
 * Greg Kostal's https://github.com/gkostal/attestation/tree/master/sgx.attest.sample/validatequotes.net
 * Larry Osterman's https://github.com/LarryOsterman/RetrieveAndVerifyMetadataCerts/tree/master/VerifyMetadataCertificates
+* Martin Vorbrodt's blog on Base64 Encoding: https://vorbrodt.blog/2019/03/23/base64-encoding/
+* Curl building using vcpkg: https://github.com/curl/curl/blob/master/docs/INSTALL.md#building-using-vcpkg
+* LibCurl's example: https://curl.se/libcurl/c/getinmemory.html
+* https://gist.github.com/cseelye/adcd900768ff61f697e603fd41c67625 <- TODO: add what this ref is
 
-Thanks to Larry and Greg for the samples!
+Thanks for the samples!
 
-## Windows OS
-#### Prerequisites
-- [ ] Install cmake https://cmake.org/install/
-- [ ] VS tools
+## TODO
+- [ ] Add quote validation
 
-#### Build and Run
-```
-.\windows_build_and_run.ps1
-```
-or
-```
-.\windows_build_and_run.ps1 PATH_TO_MSBUILD.EXE
-```
-
-## Linux
-#### Prerequisites
-ubuntu linux
-```
-sudo apt install -y cmake make g++
-```
-#### Build and Run
-```
-sudo chmod +x linux_build_and_run.sh
-./linux_build_and_run.sh
-```

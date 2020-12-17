@@ -1,15 +1,26 @@
 $curdir = Get-Location
-$out = ".\out"
+$Env:LOCAL_ROOT=$curdir
+
+git submodule update --init --recursive
+
+cd $curdir\vcpkg
+.\bootstrap-vcpkg.bat
+.\vcpkg.exe integrate install
+.\vcpkg.exe install curl[openssl] zlib openssl --triplet x64-windows
+
+$mvjdir="$curdir/maa-validate-jwt"
+
+cd $mvjdir
+$out = "out"
 If((Test-Path $out))
 {
     Remove-Item $out -Force -Recurse
 }
 New-Item -ItemType Directory -Force -Path $out
-$Env:LOCAL_ROOT=(Split-Path $(Get-Location) -Parent)
 
 cd $out 
 
-cmake ..\
+cmake $mvjdir
 
 $msbuildpath=$Args[0]
 
@@ -21,6 +32,7 @@ echo "Temporary adding '$msbuildpath' to the PATH"
 
 Set-Item -Path Env:Path -Value ($Env:Path + $msbuildpath)
 msbuild maa-validate-jwt.sln
+
 cd .\Debug
 .\maa-validate-jwt.exe
 cd $curdir

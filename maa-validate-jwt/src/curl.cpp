@@ -78,10 +78,10 @@ namespace mvj {
 
             CURLcode res = curl_easy_perform(curl_);
             if (CURLE_OK != res) {
-                Context::log("curl_easy_perform() failed:" + std::string(curl_easy_strerror(res)));
+                Context::log("curl_easy_perform() failed: " + std::string(curl_easy_strerror(res)));
             }
             else {
-                Context::log("Received" + std::to_string(chunk.size) + " bytes");
+                Context::log("Received " + std::to_string(chunk.size) + " bytes");
                 response = std::string(chunk.memory);
             }
             curl_easy_cleanup(curl_);

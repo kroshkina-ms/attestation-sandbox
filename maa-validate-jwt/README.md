@@ -6,7 +6,6 @@ The code in this directory borrows some logic and copied/pasted from:
 * Martin Vorbrodt's blog on Base64 Encoding: https://vorbrodt.blog/2019/03/23/base64-encoding/
 * Curl building using vcpkg: https://github.com/curl/curl/blob/master/docs/INSTALL.md#building-using-vcpkg
 * LibCurl's example: https://curl.se/libcurl/c/getinmemory.html
-* https://gist.github.com/cseelye/adcd900768ff61f697e603fd41c67625 <- TODO: add what this ref is
 
 Thanks for the samples!
 

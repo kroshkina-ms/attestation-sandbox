@@ -11,7 +11,7 @@ mkdir out
 export LOCAL_ROOT="$(dirname $(pwd))"
 echo $LOCAL_ROOT
 cd out/
-cmake ../
+cmake  -DCMAKE_BUILD_TYPE=Debug ../
 make
 
 ./maa-validate-jwt

@@ -24,6 +24,7 @@ project(maa-validate-jwt)
 find_package(OpenSSL REQUIRED)
 find_package(ZLIB REQUIRED)
 find_package(CURL CONFIG REQUIRED)
+find_package(OpenEnclave CONFIG REQUIRED)
 
 set(SOURCES
 	${CMAKE_CURRENT_SOURCE_DIR}/src/context.cpp
@@ -32,10 +33,11 @@ set(SOURCES
 	${CMAKE_CURRENT_SOURCE_DIR}/src/jwt.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/utils.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/verify.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/x509.cpp
 )
 
-set(HEADERS 
+set(HEADERS
 	${CMAKE_CURRENT_SOURCE_DIR}/include/ascii_escape_code.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/include/base64.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/include/context.hpp
@@ -43,6 +45,7 @@ set(HEADERS
 	${CMAKE_CURRENT_SOURCE_DIR}/include/jwks.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/include/jwt.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/include/utils.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/include/verify.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/include/x509.hpp
 )
 
@@ -50,6 +53,7 @@ add_executable(maa-validate-jwt ${SOURCES} ${HEADERS})
 
 target_link_libraries(maa-validate-jwt PRIVATE OpenSSL::SSL OpenSSL::Crypto)
 target_link_libraries(maa-validate-jwt PRIVATE CURL::libcurl)
+target_link_libraries(maa-validate-jwt PRIVATE openenclave::oeenclave openenclave::oelibcxx)
 target_include_directories(maa-validate-jwt PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 if(WINDOWS)

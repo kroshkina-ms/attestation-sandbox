@@ -3,116 +3,18 @@
 #include <iostream>
 #include <vector>
 #include <cstring>
+#include <algorithm>
 #include <openssl/conf.h>
 #include <openssl/err.h>
 #include <openssl/pem.h>
+#include <openssl/x509v3.h>
+#include <openssl/ts.h>
+
+#include <context.hpp>
 
 namespace mvj {
- 
-//    const char* kSgxExtensionOidX = "1.2.840.113556.10.1.1";
 
-    X509Cert::X509Cert() {
-
-    }
-
-    X509Cert::~X509Cert() {
-        clear();
-    }
-
-    bool X509Cert::deserialize(const std::string& cert_str) {
-        clear();
-        init();
-
-        std::string cert_content = "-----BEGIN CERTIFICATE-----\n" + cert_str + "\n-----END CERTIFICATE-----";
-
-        // Put the certificate contents into an openssl IO stream (BIO)
-        BIO_ptr input(BIO_new(BIO_s_mem()), BIO_free);
-        BIO_write(input.get(), cert_content.c_str(), (int)cert_content.size());
-
-        // Create an openssl certificate from the BIO
-        X509_ptr cert(PEM_read_bio_X509_AUX(input.get(), NULL, NULL, NULL), X509_free);
-
-        // Create a BIO to hold info from the cert
-        BIO_ptr output_bio(BIO_new(BIO_s_mem()), BIO_free);
-
-        //
-        // Get the full human readable representation of the certificate
-        //
-        X509_print_ex(output_bio.get(), cert.get(), 0, 0);
-        
-        // Put the contents of the BIO into a C++ string
-        char buffer[32768]; //TODO: change the size
-        memset(buffer, 0, 32768);
-        BIO_read(output_bio.get(), buffer, 32768 - 1);
-        std::string cert_details = std::string(buffer);
-        
-        BIO_reset(output_bio.get());
-        std::cout << "========================================" << std::endl;
-        std::cout << "  Certificate details:" << std::endl;
-        std::cout << cert_details << std::endl;
-        std::cout << "========================================" << std::endl;
-        std::cout << std::endl;
-
-
-        //
-        // Get the subject of the certificate.
-        //
-
-        // According to the openssl documentation:
-        // The returned value is an internal pointer which MUST NOT be freed
-        X509_NAME* subject = X509_get_subject_name(cert.get());
-
-        // Print the subject into a BIO and then get a string
-        X509_NAME_print_ex(output_bio.get(), subject, 0, 0);
-
-
-        char cert_buffer[4096];
-        memset(cert_buffer, 0, 4096);
-        BIO_read(output_bio.get(), cert_buffer, 4096 - 1);
-        std::string cert_subject = std::string(cert_buffer);
-
-
-        // Max subject length should be 555 bytes with ascii characters or 3690
-        // bytes with unicode, based on the max allowed lengths for each component
-        // of the subject plus the formatting.
-        // Country code - 2 bytes
-        // State/locality name - 128 bytes
-        // Organization name - 64 bytes
-        // Organizational unit name - 64 bytes
-        // Common name - 64 bytes
-        // email address - 64 bytes
-
-        std::cout << "Subject:" << std::endl;
-        std::cout << cert_subject << std::endl;
-        std::cout << std::endl;
-
-
-        //
-        // Get the expiration date of the certificate
-        //
-
-        // X509_get_notAfter returns the time that the cert expires, in Abstract
-        // Syntax Notation
-        // According to the openssl documentation:
-        // The returned value is an internal pointer which MUST NOT be freed
-        ASN1_TIME* expires = X509_get_notAfter(cert.get());
-
-        // Construct another ASN1_TIME for the unix epoch, get the difference
-        // between them and use that to calculate a unix timestamp representing
-        // when the cert expires
-        ASN1_TIME_ptr epoch(ASN1_TIME_new(), ASN1_STRING_free);
-        ASN1_TIME_set_string(epoch.get(), "700101000000Z");
-        int days, seconds;
-        ASN1_TIME_diff(&days, &seconds, epoch.get(), expires);
-        time_t expire_timestamp = (days * 24 * 60 * 60) + seconds;
-
-        std::cout << "Expiration timestamp:" << std::endl;
-        std::cout << expire_timestamp << std::endl;
-        std::cout << std::endl;
-        return true;
-    }
-
-    void X509Cert::init() {
+    void X509QuoteExt::init() {
         // Adds all algorithms to the table (digests and ciphers).
         // In versions prior to 1.1.0 EVP_cleanup() removed all ciphers and digests from the table.
         // It no longer has any effect in OpenSSL 1.1.0.
@@ -126,7 +28,105 @@ namespace mvj {
         OPENSSL_no_config();
     }
 
-    void X509Cert::clear() {
+
+    X509QuoteExt::X509QuoteExt() {
+    }
+
+    X509QuoteExt::~X509QuoteExt() {
+        clear();
+    }
+
+    std::vector<uint8_t> X509QuoteExt::find_extension(const std::string& extension_oid) const {
+        std::vector<uint8_t> res;
+        auto it = this->extensions_.find(extension_oid);
+        if (it != this->extensions_.end()) {
+            res = it->second;
+        }
+        return res;
+    }
+
+void output_certificate(const uint8_t* data, size_t data_len)
+{
+    X509* x509;
+    BIO* input = BIO_new_mem_buf(data, (int)data_len);
+    x509 = d2i_X509_bio(input, nullptr);
+    if (x509)
+        X509_print_ex_fp(
+            stdout,
+            x509,
+            XN_FLAG_COMPAT,
+            XN_FLAG_SEP_CPLUS_SPC | XN_FLAG_DUMP_UNKNOWN_FIELDS);
+    BIO_free_all(input);
+}
+
+    bool X509QuoteExt::parse_extension(const STACK_OF(X509_EXTENSION) *exts, int n) {
+        // Create a BIO to hold info from the cert.
+        BIO_ptr output_bio(BIO_new(BIO_s_mem()), BIO_free);
+
+        X509_EXTENSION *ex = X509v3_get_ext(exts, n);
+        ASN1_OBJECT *obj = X509_EXTENSION_get_object(ex);
+        if (i2a_ASN1_OBJECT(output_bio.get(), obj) < 0) {
+            Context::log("Failed to write X509 extension into BIO, extension # " + std::to_string(n));
+            return false;
+        }
+
+        // Magic number 80 is a constance used within OpenSSL library.
+	    // See: https://git.happyzh.com/github/openssl/-/blob/master/crypto/asn1/a_object.c#L187
+	    const int sz = 80;
+	    char obj_buffer[sz];
+        memset(obj_buffer, 0, sz);
+        BIO_read(output_bio.get(), obj_buffer, sz - 1);
+        std::string ext_string(obj_buffer);
+
+        BIO_reset(output_bio.get());
+	    if (!X509V3_EXT_print(output_bio.get(), ex, 0, 0)) {
+            ASN1_STRING_print(output_bio.get(), X509_EXTENSION_get_data(ex));
+        }
+	    const int large_sz = 32768;
+	    char value_buffer[large_sz];
+        memset(value_buffer, 0, large_sz);
+        BIO_read(output_bio.get(), value_buffer, large_sz - 1);
+        std::vector<uint8_t> value(large_sz);
+	    std::transform(value_buffer, value_buffer + large_sz, value.begin(), [](char v) {return static_cast<uint8_t>(v);});
+
+	    this->extensions_.insert({ext_string, value});
+        return true;
+    }
+
+    bool X509QuoteExt::deserialize(const std::string& cert_str) {
+        clear();
+        init();
+
+        std::string cert_content = "-----BEGIN CERTIFICATE-----\n" + cert_str + "\n-----END CERTIFICATE-----";
+////////////////////////////////////////////////////////////
+        output_certificate(reinterpret_cast<const uint8_t*>(&cert_content[0]), cert_content.size());
+        
+    // Put the certificate contents into an openssl IO stream (BIO)
+       	BIO_ptr bio = BIO_ptr(BIO_new(BIO_s_mem()), BIO_free);
+        BIO_write(bio.get(), cert_content.c_str(), (int)cert_content.size());
+
+        // Create an openssl certificate from the BIO
+        X509_ptr cert(PEM_read_bio_X509_AUX(bio.get(), NULL, NULL, NULL), X509_free);
+
+    	const STACK_OF(X509_EXTENSION) *exts = X509_get0_extensions(cert.get());
+	    const int ext_count = X509_get_ext_count(cert.get());
+	    for (int i = 0; i < ext_count; ++i) {
+            if (!parse_extension(exts, i)) {
+                Context::log("Failed to deserialize one of the extensions");
+		        return false;
+	        }
+	    }
+
+	    //for (auto t: this->extensions_) {
+	    //	std::cout << t.first << std::endl;
+	    //	std::string s(t.second.begin(), t.second.end());
+	    //	std::cout << s << std::endl;
+	    //	std::cout << "========================================" << std::endl;
+	    //}
+        return true;
+    }
+
+    void X509QuoteExt::clear() {
         FIPS_mode_set(0);
         CONF_modules_unload(1);
         CONF_modules_free();

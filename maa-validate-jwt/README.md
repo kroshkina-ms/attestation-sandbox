@@ -12,3 +12,5 @@ Thanks for the samples!
 ## TODO
 - [ ] Add quote validation
 
+## Links
+- https://github.com/openenclave/openenclave/blob/v0.9.x/docs/GettingStartedDocs/install_oe_sdk-Ubuntu_18.04.md

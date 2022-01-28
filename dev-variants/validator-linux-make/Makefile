@@ -4,7 +4,6 @@ CXX := g++
 CXXFLAGS := -g -Wall -std=c++17 -pthread
 
 ROOTDIR := .
-OUTDIR := $(ROOTDIR)/out
 OBJDIR := $(ROOTDIR)/obj
 INCDIR := $(ROOTDIR)/include
 SRCDIR := $(ROOTDIR)/src
@@ -31,7 +30,6 @@ $(OBJS): $(OBJDIR)/%.o: $(SRCDIR)/%.cpp $(INCS)
 dump:
 	@echo "HOME     : $(HOME)"
 	@echo "ROOTDIR  : $(ROOTDIR)"
-	@echo "OUTDIR   : $(OUTDIR)"
 	@echo "OBJDIR   : $(OBJDIR)"
 	@echo "INCDIR   : $(INCDIR)"
 	@echo "SRCDIR   : $(SRCDIR)"

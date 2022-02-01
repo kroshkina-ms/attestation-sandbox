@@ -14,8 +14,9 @@ OBJS := $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(SRCS))
 
 INCLUDES := -I. -I$(INCDIR)
 LIBINCLUDES := -L/usr/lib/ssl -L/usr/lib
-INC := $(INCLUDES) $(LIBINCLUDES) 
-LIBS := -lssl -lcrypto -lcurl
+INC := $(INCLUDES) $(LIBINCLUDES)
+LIBS := -lssl -lcrypto -lcurl $(shell pkg-config oehost-$(CXX) --libs)
+#LIBS := -lssl -lcrypto -lcurl
 
 # rules
 

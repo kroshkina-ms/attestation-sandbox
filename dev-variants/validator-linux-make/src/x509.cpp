@@ -97,6 +97,11 @@ namespace mvj {
         clear();
         init();
 
+	std::cout << "+++++++++++++++++++++++++++++++" << std::endl;
+	std::cout << "RAW CERT STRING:" << std::endl;
+	std::cout << cert_str << std::endl; 
+	std::cout << "+++++++++++++++++++++++++++++++" << std::endl;
+
         ////////////////////////////////////////////////////////////
         std::string cert_content = "-----BEGIN CERTIFICATE-----\n" + cert_str + "\n-----END CERTIFICATE-----";
         output_certificate(reinterpret_cast<const uint8_t*>(&cert_content[0]), cert_content.size());

@@ -8,8 +8,32 @@
 #include <jwks.hpp>
 #include <curl.hpp>
 #include <x509.hpp>
+#include <base64.hpp>
+
+#include <openenclave/host_verify.h>
+#include <cstring>
 
 using namespace mvj;
+
+uint32_t _id_version;
+uint64_t _attributes;
+uint32_t _security_version;
+std::array<uint8_t, OE_UNIQUE_ID_SIZE> _unique_id{};
+std::array<uint8_t, OE_SIGNER_ID_SIZE> _signer_id{};
+std::array<uint8_t, OE_PRODUCT_ID_SIZE> _product_id{};
+
+oe_result_t verify_metadata_quote(oe_identity_t* identity, void* arg)
+{
+    (void)arg;
+    _attributes = identity->attributes;
+    _id_version = identity->id_version;
+    _security_version = identity->security_version;
+    std::memcpy(_unique_id.data(), identity->unique_id, OE_UNIQUE_ID_SIZE);
+    std::memcpy(_signer_id.data(), identity->signer_id, OE_SIGNER_ID_SIZE);
+    std::memcpy(_product_id.data(), identity->product_id, OE_PRODUCT_ID_SIZE);
+    return OE_OK;
+}
+
 
 int main(int argc, char* argv[]) {
     std::vector<std::string> argvec(argc, "");
@@ -54,18 +78,25 @@ int main(int argc, char* argv[]) {
     }
 
     // Validate.
-
-    // 1. Verify if quote extension is in certificate
+    // 1. Verify if quote extension is in certificate.
     auto quote_ext = x509.find_extension("1.3.6.1.4.1.311.105.1");
     if (quote_ext.size() > 0) {
-        //std::string s(quote_ext.begin(), quote_ext.end());
-        //std::cout << "quote=" << s << std::endl;
-        Context::log("Embedded quote found in certificate");
+        Context::log("SUCCESS - Embedded quote found in certificate");
     } else {
         Context::log("ERROR - Failed to find wanted quote extension");
         return EXIT_FAILURE;
     }
 
+    // 2. Call the oe_verify_attestation_certificate on THE CERT.
+    auto decoded_cert = base64::decode(certs[0]);
+    auto rv = oe_verify_attestation_certificate(decoded_cert.data(), decoded_cert.size(), verify_metadata_quote, nullptr);
+    if (rv != OE_OK)
+    {
+        Context::log("ERROR - Failed to verify attestation certificate");
+        return EXIT_FAILURE;
+    } else {
+        Context::log("SUCCESS - Great success");
+    }
 
     return EXIT_SUCCESS;
 }

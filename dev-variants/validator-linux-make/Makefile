@@ -12,11 +12,10 @@ INCS := $(wildcard *.hpp $(foreach fd, $(INCDIR), $(fd)/*.hpp))
 SRCS := $(wildcard *.cpp $(foreach fd, $(SRCDIR), $(fd)/*.cpp))
 OBJS := $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(SRCS))
 
-INCLUDES := -I. -I$(INCDIR)
+INCLUDES := -I. -I$(INCDIR) $(shell pkg-config oehostverify-$(CXX) --cflags)
 LIBINCLUDES := -L/usr/lib/ssl -L/usr/lib
 INC := $(INCLUDES) $(LIBINCLUDES)
-LIBS := -lssl -lcrypto -lcurl $(shell pkg-config oehost-$(CXX) --libs)
-#LIBS := -lssl -lcrypto -lcurl
+LIBS := -lssl -lcrypto -lcurl $(shell pkg-config oehostverify-$(CXX) --libs)
 
 # rules
 

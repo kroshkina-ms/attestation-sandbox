@@ -1,6 +1,5 @@
 #include <verify.hpp>
 
-#include <openenclave/host.h>
 #include <openenclave/host_verify.h>
 #include <openenclave/bits/defs.h>
 

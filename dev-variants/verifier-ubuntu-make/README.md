@@ -1,4 +1,4 @@
-## Ream Me First
+## Read Me First
 
 - This sample variant uses libraries installed onto the system using `apt` package tool, instead of vcpkg as the main sample.
 - The commands in this document are placed in blocks, so the reader can simply use GitHub's interface to copy the blocks instead of manually selecting, copying, and pasting them.
@@ -73,7 +73,7 @@ git submodule update --init
 
 ## Build and Run
 ```
-cd dev-variants/verifier-linux-make
+cd dev-variants/verifier-ubuntu-make
 ```
 
 ```
@@ -87,7 +87,7 @@ Check the tool's usage syntax:
 
 Verify quote in JWT:
 ```
-./jwt-verifier [options] <jwt-filenam>
+./jwt-verifier [options] <jwt-filename>
 ```
 
 For instance:

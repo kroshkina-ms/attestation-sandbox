@@ -12,7 +12,6 @@ namespace mvj {
     bool Jwt::deserialize(const std::string& token) {
         try {
             encoded_token_ = token;
-            // hps = header, payload, signature
             std::vector<std::string> hps; 
             strings::split(token, "\\.", hps);
     

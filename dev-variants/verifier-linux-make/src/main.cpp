@@ -45,12 +45,14 @@ int main(int argc, char* argv[]) {
     // Read JWT from file.
     std::vector<std::string> str_tokens;
     if (!file::get_lines(Context::instance().get_jwt_filename(), str_tokens)) {
+        Context::always_log("ERROR - Failed to read input file");
         return EXIT_FAILURE;
     }
 
     // Deserialize JWT.
     Jwt jwt;
     if (!jwt.deserialize(str_tokens[0])) {
+        Context::always_log("ERROR - Failed to deserialize JWT token");
         return EXIT_FAILURE;
     }
 
@@ -58,7 +60,7 @@ int main(int argc, char* argv[]) {
     Curl curl;
     std::string response = curl.get(jwt.get_jku());
     if (response.empty()) {
-        Context::log("ERROR - Failed to retrieve certificates");
+        Context::always_log("ERROR - Failed to retrieve certificates");
         return EXIT_FAILURE;
     }
 
@@ -66,23 +68,23 @@ int main(int argc, char* argv[]) {
     Jwks jwks(response);
     std::vector<std::string> certs;
     if (!jwks.get_certs(jwt.get_kid(), certs)) {
-        Context::log("ERROR - Failed to find x509 certificates for the key");
+        Context::always_log("ERROR - Failed to find x509 certificates for the key");
         return EXIT_FAILURE;
     }
 
     // X.509.
     X509QuoteExt x509;
     if (!x509.deserialize(certs[0])) {
-        Context::log("ERROR - Failed to deserialize x509 cert");
+        Context::always_log("ERROR - Failed to deserialize x509 cert");
         return EXIT_FAILURE;
     }
 
     // 1. Verify if quote extension is in certificate.
     auto quote_ext = x509.find_extension("1.3.6.1.4.1.311.105.1");
     if (quote_ext.size() > 0) {
-        Context::log("SUCCESS - Embedded quote found in certificate");
+        Context::always_log("SUCCESS - Embedded quote found in certificate");
     } else {
-        Context::log("ERROR - Failed to find wanted quote extension");
+        Context::always_log("ERROR - Failed to find wanted quote extension");
         return EXIT_FAILURE;
     }
 
@@ -91,10 +93,10 @@ int main(int argc, char* argv[]) {
     auto rv = oe_verify_attestation_certificate(decoded_cert.data(), decoded_cert.size(), verify_metadata_quote, nullptr);
     if (rv != OE_OK)
     {
-        Context::log("ERROR - Failed to verify attestation certificate");
+        Context::always_log("ERROR - Failed to verify attestation certificate");
         return EXIT_FAILURE;
     } else {
-        Context::log("SUCCESS - Great success");
+        Context::always_log("SUCCESS - Verified attestation certificate quote");
     }
 
     return EXIT_SUCCESS;

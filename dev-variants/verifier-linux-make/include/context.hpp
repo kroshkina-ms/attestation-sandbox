@@ -24,6 +24,7 @@ namespace mvj {
 		}
 
 		static void log(const std::string& message);
+    static void always_log(const std::string& message);
 
 		void set(const std::vector<std::string>& args);
 		void dump() const;

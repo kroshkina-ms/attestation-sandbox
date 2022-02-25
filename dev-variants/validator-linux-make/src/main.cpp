@@ -77,7 +77,6 @@ int main(int argc, char* argv[]) {
         return EXIT_FAILURE;
     }
 
-    // Validate.
     // 1. Verify if quote extension is in certificate.
     auto quote_ext = x509.find_extension("1.3.6.1.4.1.311.105.1");
     if (quote_ext.size() > 0) {

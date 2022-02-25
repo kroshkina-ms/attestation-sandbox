@@ -73,7 +73,7 @@ git submodule update --init
 
 ## Build and Run
 ```
-cd dev-variants/validator-linux-make
+cd dev-variants/verifier-linux-make
 ```
 
 ```
@@ -82,15 +82,15 @@ make distclean && make
 
 Check the tool's usage syntax:
 ```
-./jwt-validator
+./jwt-verifier
 ```
 
-Validate JWT:
+Verify quote in JWT:
 ```
-./jwt-validator [options] <jwt-filenam>
+./jwt-verifier [options] <jwt-filenam>
 ```
 
 For instance:
 ```
-./jwt-validator -v ~/samples/jwt.txt
+./jwt-verifier -v ~/samples/jwt.txt
 ```

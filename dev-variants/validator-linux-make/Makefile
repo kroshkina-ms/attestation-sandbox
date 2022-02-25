@@ -1,4 +1,4 @@
-TARGET := jwt-validator
+TARGET := jwt-verifier
 
 CXX := g++
 CXXFLAGS := -g -Wall -std=c++17 -pthread

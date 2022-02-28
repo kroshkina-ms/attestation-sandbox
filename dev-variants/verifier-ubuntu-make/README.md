@@ -19,7 +19,7 @@ sudo apt -y upgrade
 ```
 
 #### Configure the Intel and Microsoft APT Repositories
-> This step and the next one below are based on the Open Enclave's documentation with minor adjustments, see [install_host_verify_Ubuntu_18.04](https://github.com/openenclave/openenclave/blob/master/docs/GettingStartedDocs/install_host_verify_Ubuntu_18.04.md).
+> This step and the next one below are based on the Open Enclave's documentation with a few adjustments, see [install_host_verify_Ubuntu_18.04](https://github.com/openenclave/openenclave/blob/master/docs/GettingStartedDocs/install_host_verify_Ubuntu_18.04.md).
 
 ```bash
 echo 'deb [arch=amd64] https://download.01.org/intel-sgx/sgx_repo/ubuntu bionic main' | sudo tee /etc/apt/sources.list.d/intel-sgx.list

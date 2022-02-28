@@ -20,7 +20,7 @@ function __msg_stage() {
 __msg_stage "Install tools"
 
 sudo apt-get update
-sudo apt install -y cmake make g++ curl zip unzip tar pkg-config
+sudo apt install -y cmake make g++ curl zip unzip tar pkg-config libsgx-dcap-ql libsgx-dcap-ql-dev az-dcap-client open-enclave
 
 __msg_stage "Set up development environment and install the dependencies"
 

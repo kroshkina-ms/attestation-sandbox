@@ -22,8 +22,12 @@ namespace mvj {
 
     void Context::log(const std::string& message) {
         if (Context::instance().is_verbose()) {
-            std::cout << "\t---\t" << message << std::endl;
+            std::cout << message << std::endl;
         }
+    }
+
+    void Context::always_log(const std::string& message) {
+        std::cout << "\t---\t" << message << std::endl;
     }
 
     void Context::set(const std::vector<std::string>& args) {
@@ -110,7 +114,7 @@ namespace mvj {
 
     void Context::help_and_exit(const std::string&) {
         std::cout << std::endl;
-        std::cout << "Usage: maavalidatejwt [options] file" << std::endl;
+        std::cout << "Usage: jwt_varifier [options] file" << std::endl;
         std::cout << std::endl;
         std::cout << "Arguments:" << std::endl;
         std::cout << "    -mrsigner <value>        Verify MAA MRSIGNER value is <value>" << std::endl;
@@ -118,7 +122,7 @@ namespace mvj {
         std::cout << "    -productid <value>       Verify MAA PRODUCTID value is <value>" << std::endl;
         std::cout << "    -svn <value>             Verify MAA SVN value is <value>" << std::endl;
         std::cout << "    -isdebuggable <value>    Verify MAA ISDEBUGGABLE value is <value>" << std::endl;
-        std::cout << "    -v or --verbose          Include verbose messages during validation" << std::endl;
+        std::cout << "    -v or --verbose          Include verbose messages" << std::endl;
         std::cout << "    -h or --help             Print Help (this message) and exit" << std::endl;
         std::cout << std::endl;
         exit(EXIT_SUCCESS);

@@ -4,7 +4,7 @@
 - The commands in this document are placed in blocks, so the reader can simply use GitHub's interface to copy the blocks instead of manually selecting, copying, and pasting them.
 
 ## Prerequisites
-- [ ] Dev System with Ubuntu_18.04
+- Dev System with Ubuntu_18.04
 
 
 ## Install Dependencies

@@ -1,6 +1,6 @@
 ## Read Me First
 
-- This sample variant uses libraries installed onto the system using `apt` package tool, instead of vcpkg as the main sample.
+- This sample variant uses libraries installed onto the system using `apt` package tool, instead of `vcpkg` as the main sample.
 - The commands in this document are placed in blocks, so the reader can simply use GitHub's interface to copy the blocks instead of manually selecting, copying, and pasting them.
 
 ## Prerequisites

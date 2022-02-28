@@ -5,7 +5,7 @@
 
 ## Prerequisites
 - Dev System with Ubuntu_18.04
-
+- MAA JWT sample token as an input for the verification
 
 ## Install Dependencies
 

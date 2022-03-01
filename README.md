@@ -1,3 +1,6 @@
+> The repo is work in progress!
+
+See [MAA JWT Verifier (Ubuntu_18.04 + Make)](/dev-variants/verifier-ubuntu-make)
 
 ## About
 

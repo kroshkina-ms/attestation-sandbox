@@ -18,10 +18,11 @@ namespace mvj {
 
     public:
         X509QuoteExt();
+        explicit X509QuoteExt(const std::string& cert_content);
         ~X509QuoteExt();
 
-        bool deserialize(const std::string& cert_content);
         std::vector<uint8_t> find_extension(const std::string& extension_oid) const;
+        bool deserialize(const std::string& cert_content);
 
     private:
         void init();

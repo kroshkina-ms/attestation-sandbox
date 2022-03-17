@@ -95,11 +95,11 @@ namespace mvj {
 
     bool Context::is_verbose() const { return this->is_verbose_; }
 
-    std::string Context::get_jwt_filename() const { return this->jwt_filename_; }
-    std::string Context::get_mrsigner() const { return this->mrsigner_; }
-    std::string Context::get_productid() const { return this->productid_; }
-    std::string Context::get_mrenclave() const { return this->mrenclave_; }
-    std::string Context::get_svn() const { return this->svn_; }
+    const std::string& Context::get_jwt_filename() const { return this->jwt_filename_; }
+    const std::string& Context::get_mrsigner() const { return this->mrsigner_; }
+    const std::string& Context::get_productid() const { return this->productid_; }
+    const std::string& Context::get_mrenclave() const { return this->mrenclave_; }
+    const std::string& Context::get_svn() const { return this->svn_; }
     int Context::get_debuggable() const { return this->debuggable_; }
 
     void Context::set_verbose(const std::string&) { this->is_verbose_ = true; }

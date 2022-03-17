@@ -30,11 +30,11 @@ namespace mvj {
 		void dump() const;
 		bool is_verbose() const;
 
-		std::string get_jwt_filename() const;
-		std::string get_mrsigner() const;
-		std::string get_productid() const;
-		std::string get_mrenclave() const;
-		std::string get_svn() const;
+		const std::string& get_jwt_filename() const;
+		const std::string& get_mrsigner() const;
+		const std::string& get_productid() const;
+		const std::string& get_mrenclave() const;
+		const std::string& get_svn() const;
 		int get_debuggable() const;
 
 	private:

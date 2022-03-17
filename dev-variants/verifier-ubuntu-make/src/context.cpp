@@ -2,7 +2,6 @@
 #include <utils.hpp>
 
 #include <functional>
-#include <iostream>
 #include <chrono>
 #include <unordered_map>
 
@@ -20,14 +19,8 @@ namespace mvj {
         this->debuggable_ = -1;
     }
 
-    void Context::log(const std::string& message) {
-        if (Context::instance().is_verbose()) {
-            std::cout << message << std::endl;
-        }
-    }
-
     void Context::always_log(const std::string& message) {
-        std::cout << "\t---\t" << message << std::endl;
+        std::cout << "---\t" << message << std::endl;
     }
 
     void Context::set(const std::vector<std::string>& args) {

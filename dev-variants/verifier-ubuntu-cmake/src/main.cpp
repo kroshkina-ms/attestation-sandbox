@@ -33,7 +33,7 @@ std::string uint8_to_hex_string(const uint8_t *v, const size_t s) {
       return ss.str();
 }
 
-oe_result_t enclave_identity_verifier(oe_identity_t* identity, void* arg)
+oe_result_t enclave_identity_verifier(oe_identity_t* identity, void*)
 {
     _attributes = identity->attributes;
     _id_version = identity->id_version;

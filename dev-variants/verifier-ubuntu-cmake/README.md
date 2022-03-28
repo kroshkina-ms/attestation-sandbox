@@ -1,8 +1,6 @@
 ## Read Me First
 
-- **This  variant is deprecated.** It takes the oroginally proposed parameters as an input while the JWT validation tool only accepts JWT file as an input.
 - This sample variant uses libraries installed onto the system using `apt` package tool, instead of `vcpkg` as the main sample.
-- The commands in this document are placed in blocks, so the reader can simply use GitHub's interface to copy the blocks instead of manually selecting, copying, and pasting them.
 
 ## Prerequisites
 - Dev System with Ubuntu_18.04
@@ -12,11 +10,7 @@
 
 #### Update and Upgrade System
 ```
-sudo apt update
-```
-
-```
-sudo apt -y upgrade
+sudo apt update && sudo apt -y upgrade
 ```
 
 #### Configure the Intel and Microsoft APT Repositories
@@ -37,7 +31,7 @@ sudo apt update
 ```
 
 ```
-sudo apt -y install make g++ gdb libssl-dev libcurl4-openssl-dev libprotobuf10 libsgx-dcap-ql libsgx-dcap-ql-dev az-dcap-client open-enclave-hostverify
+sudo apt -y install make cmake g++ gdb libssl-dev libcurl4-openssl-dev libprotobuf10 libsgx-dcap-ql libsgx-dcap-ql-dev az-dcap-client open-enclave-hostverify
 ```
 
 > This step also installs the [az-dcap-client](https://github.com/microsoft/azure-dcap-client)
@@ -76,24 +70,24 @@ git submodule update --init
 
 ## Build and Run
 ```
-cd dev-variants/verifier-ubuntu-make
+cd dev-variants/verifier-ubuntu-cmake
 ```
 
 ```
-make clean && make
+./linux_build_and_run.sh
 ```
 
 Check the tool's usage syntax:
 ```
-./jwt-verifier
+./out/jwt-verifier
 ```
 
 Verify quote in JWT:
 ```
-./jwt-verifier [options] <jwt-filename>
+./out/jwt-verifier [options] <jwt-filename>
 ```
 
 For instance:
 ```
-./jwt-verifier -v ~/samples/jwt.txt
+./out/jwt-verifier -v ~/samples/jwt.txt
 ```

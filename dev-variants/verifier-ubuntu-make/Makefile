@@ -19,7 +19,7 @@ LIBS := -lssl -lcrypto -lcurl $(shell pkg-config oehostverify-$(CXX) --libs)
 
 # rules
 
-.PHONY: dump clean distclean
+.PHONY: dump clean
 
 $(TARGET): $(OBJDIR) $(OBJS) 
 	$(CXX) $(CXXFLAGS) $(INC) -o $(TARGET) $(OBJS) $(LIBS) 
@@ -47,7 +47,5 @@ dump:
 clean:
 	@rm -vf *.o ./**/*.o
 	@rm -rvf $(OBJDIR)
-
-distclean: clean
 	@rm -vf $(TARGET)
 

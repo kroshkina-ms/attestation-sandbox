@@ -37,7 +37,7 @@ cd $LOCAL_ROOT
 
 __msg_stage "Clean and build MAA JWT validation tool"
 
-JWT_VALIDATOR_SRC_DIR=$LOCAL_ROOT"/maa-validate-jwt"
+JWT_VALIDATOR_SRC_DIR=$LOCAL_ROOT"/dev-variants/verifier-ubuntu-cmake"
 JWT_VALIDATOR_OUT_DIR=$JWT_VALIDATOR_SRC_DIR"/out"
 
 cd $JWT_VALIDATOR_SRC_DIR

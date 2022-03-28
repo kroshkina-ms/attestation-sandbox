@@ -32,6 +32,12 @@ namespace mvj {
     X509QuoteExt::X509QuoteExt() {
     }
 
+    X509QuoteExt::X509QuoteExt(const std::string& cert_str) {
+        if (!this->deserialize(cert_str)) {
+            Context::always_log("ERROR - Failed to deserialize x509 cert");
+        }
+    }
+
     X509QuoteExt::~X509QuoteExt() {
         clear();
     }

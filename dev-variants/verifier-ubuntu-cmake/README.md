@@ -1,18 +1,93 @@
-# This folder is WORK IN PROGRESS
+## Read Me First
 
-## References 
+- This sample variant uses libraries installed onto the system using `apt` package tool, instead of `vcpkg` as the main sample.
 
-The code in this directory borrows some logic and copied/pasted from:
-* Greg Kostal's https://github.com/gkostal/attestation/tree/master/sgx.attest.sample/validatequotes.net
-* Larry Osterman's https://github.com/Azure-Samples/microsoft-azure-attestation/blob/master/sgx.attest.sample/validatequotes.net/verify.metadata.certificates/VerifyMetadataCertificates.cpp
-* Martin Vorbrodt's blog on Base64 Encoding: https://vorbrodt.blog/2019/03/23/base64-encoding/
-* Curl building using vcpkg: https://github.com/curl/curl/blob/master/docs/INSTALL.md#building-using-vcpkg
-* LibCurl's example: https://curl.se/libcurl/c/getinmemory.html
+## Prerequisites
+- Dev System with Ubuntu_18.04
+- MAA JWT sample token as an input for the verification
 
-Thanks for the samples!
+## Install Dependencies
 
-## TODO
-- [ ] Add quote validation
+#### Update and Upgrade System
+```
+sudo apt update && sudo apt -y upgrade
+```
 
-## Links
-- https://github.com/openenclave/openenclave/blob/v0.9.x/docs/GettingStartedDocs/install_oe_sdk-Ubuntu_18.04.md
+#### Configure the Intel and Microsoft APT Repositories
+> This step and the next one below are based on the Open Enclave's documentation with a few adjustments, see [install_host_verify_Ubuntu_18.04](https://github.com/openenclave/openenclave/blob/master/docs/GettingStartedDocs/install_host_verify_Ubuntu_18.04.md).
+
+```bash
+echo 'deb [arch=amd64] https://download.01.org/intel-sgx/sgx_repo/ubuntu bionic main' | sudo tee /etc/apt/sources.list.d/intel-sgx.list
+wget -qO - https://download.01.org/intel-sgx/sgx_repo/ubuntu/intel-sgx-deb.key | sudo apt-key add -
+
+echo "deb [arch=amd64] https://packages.microsoft.com/ubuntu/18.04/prod bionic main" | sudo tee /etc/apt/sources.list.d/msprod.list
+wget -qO - https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
+
+```
+
+#### Install the Intel and Open Enclave Host-Verify packages and dependencies
+```
+sudo apt update
+```
+
+```
+sudo apt -y install make cmake g++ gdb libssl-dev libcurl4-openssl-dev libprotobuf10 libsgx-dcap-ql libsgx-dcap-ql-dev az-dcap-client open-enclave-hostverify
+```
+
+> This step also installs the [az-dcap-client](https://github.com/microsoft/azure-dcap-client)
+> package which is necessary for performing remote attestation in Azure. A general
+> implementation for using Intel DCAP outside the Azure environment is coming soon.
+
+#### Read and execute the content of `openenclaverc`
+> This step is needed for ` pkg-config oehostverify-$(CXX) ...` command to function properly.
+
+```
+echo "source /opt/openenclave/share/openenclave/openenclaverc" >> ~/.bashrc && source ~/.bashrc
+```
+
+#### [*Optionally*]: Set Azure DCAP Debug Variable 
+> This step is needed for supressing the warning message: Azure Quote Provider: libdcap_quoteprov.so [ERROR]: Could not retrieve environment variable for 'AZDCAP_DEBUG_LOG_LEVEL'
+
+```
+export AZDCAP_DEBUG_LOG_LEVEL=None
+```
+
+## Get Code
+```
+git clone --recursive git@github.com:kroshkina-msft/attestation-sandbox.git
+```
+
+```
+cd attestation-sandbox
+```
+
+[*Optionally*]: When working with a branch:
+```
+git checkout <your_branch_name> 
+git submodule update --init
+
+```
+
+## Build and Run
+```
+cd dev-variants/verifier-ubuntu-cmake
+```
+
+```
+./linux_build_and_run.sh
+```
+
+Check the tool's usage syntax:
+```
+./out/jwt-verifier
+```
+
+Verify quote in JWT:
+```
+./out/jwt-verifier [options] <jwt-filename>
+```
+
+For instance:
+```
+./out/jwt-verifier -v ~/samples/jwt.txt
+```

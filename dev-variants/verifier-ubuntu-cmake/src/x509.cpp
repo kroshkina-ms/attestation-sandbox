@@ -32,6 +32,12 @@ namespace mvj {
     X509QuoteExt::X509QuoteExt() {
     }
 
+    X509QuoteExt::X509QuoteExt(const std::string& cert_str) {
+        if (!this->deserialize(cert_str)) {
+            Context::always_log("ERROR - Failed to deserialize x509 cert");
+        }
+    }
+
     X509QuoteExt::~X509QuoteExt() {
         clear();
     }
@@ -97,7 +103,9 @@ namespace mvj {
         clear();
         init();
 
-        ////////////////////////////////////////////////////////////
+        Context::log("Raw cert string value:");
+        Context::log(cert_str);
+
         std::string cert_content = "-----BEGIN CERTIFICATE-----\n" + cert_str + "\n-----END CERTIFICATE-----";
         output_certificate(reinterpret_cast<const uint8_t*>(&cert_content[0]), cert_content.size());
         
@@ -117,11 +125,11 @@ namespace mvj {
             }
         }
 
-        for (auto t: this->extensions_) {
-            std::cout << t.first << std::endl;
-            std::string s(t.second.begin(), t.second.end());
-            std::cout << s << std::endl;
-            std::cout << "========================================" << std::endl;
+        for (auto ext: this->extensions_) {
+            Context::log(ext.first);
+            std::string ext_value(ext.second.begin(), ext.second.end());
+            Context::log(ext_value);
+            Context::log("========================================");
         }
         return true;
     }

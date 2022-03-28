@@ -1,5 +1,6 @@
 ## Read Me First
 
+- **This  variant is deprecated.** It takes the oroginally proposed parameters as an input while the JWT validation tool only accepts JWT file as an input.
 - This sample variant uses libraries installed onto the system using `apt` package tool, instead of `vcpkg` as the main sample.
 - The commands in this document are placed in blocks, so the reader can simply use GitHub's interface to copy the blocks instead of manually selecting, copying, and pasting them.
 
@@ -51,6 +52,8 @@ echo "source /opt/openenclave/share/openenclave/openenclaverc" >> ~/.bashrc && s
 ```
 
 #### [*Optionally*]: Set Azure DCAP Debug Variable 
+> This step is needed for supressing the warning message: Azure Quote Provider: libdcap_quoteprov.so [ERROR]: Could not retrieve environment variable for 'AZDCAP_DEBUG_LOG_LEVEL'
+
 ```
 export AZDCAP_DEBUG_LOG_LEVEL=None
 ```
@@ -77,7 +80,7 @@ cd dev-variants/verifier-ubuntu-make
 ```
 
 ```
-make distclean && make
+make clean && make
 ```
 
 Check the tool's usage syntax:

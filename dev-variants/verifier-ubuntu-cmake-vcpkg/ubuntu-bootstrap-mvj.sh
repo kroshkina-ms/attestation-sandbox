@@ -21,21 +21,22 @@ __msg_stage "Install tools"
 
 sudo apt-get update
 #sudo apt install -y make cmake g++ libsgx-dcap-ql libsgx-dcap-ql-dev az-dcap-client open-enclave-hostverify
-sudo apt install -y make cmake g++
+sudo apt install -y make cmake g++ zip
 
 __msg_stage "Set up development environment and install the dependencies"
 
 export LOCAL_ROOT=$(pwd)
 __msg "LOCAL_ROOT is set to $LOCAL_ROOT"
 
-export VCPKG_ROOT="../../vcpkg"
+export VCPKG_ROOT=$LOCAL_ROOT"/../../vcpkg"
 __msg "VCPKG_ROOT is set to $VCPKG_ROOT"
 
 git submodule update --init --recursive
-cd ./$VCPKG_ROOT
-./bootstrap-vcpkg.sh
+
+cd $VCPKG_ROOT
+./bootstrap-vcpkg.sh -disableMetrics
 ./vcpkg integrate install
-./vcpkg install curl[openssl] zlib openssl --triplet x64-linux
+./vcpkg install curl[openssl] openssl --triplet x64-linux
 cd $LOCAL_ROOT
 
 __msg_stage "Clean and build MAA JWT validation tool"

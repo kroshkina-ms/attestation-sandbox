@@ -54,7 +54,7 @@ export AZDCAP_DEBUG_LOG_LEVEL=None
 
 ## Get Code
 ```
-git clone --recursive git@github.com:kroshkina-msft/attestation-sandbox.git
+git clone --recursive git@github.com:kroshkina-ms/attestation-sandbox.git
 ```
 
 ```

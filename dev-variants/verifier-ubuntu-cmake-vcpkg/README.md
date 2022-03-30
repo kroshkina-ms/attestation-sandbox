@@ -9,19 +9,24 @@
 ## Get Code
 ```
 git clone --recursive git@github.com:kroshkina-ms/attestation-sandbox.git
-cd attestation-sandbox
+```
 
+```
+cd attestation-sandbox
 ```
 
 ```
 git checkout <BRANCH_NAME>
+```
+
+```
 git submodule update --init
 ```
 
 ## Setup Environemnet and Build Main Branch
 
 ```
-cd attesation-sandbox/dev-variants/verifier-ubuntu-cmake
+cd attesation-sandbox/dev-variants/verifier-ubuntu-cmake-vcpkg
 ```
 
 ```
@@ -40,5 +45,5 @@ Verify quote in JWT:
 
 For instance:
 ```
-./out/jwt-verifier -v ~/samples/jwt.txt
+./out/jwt-verifier -v ~/jwt-samples/jwt.txt
 ```

@@ -1,6 +1,5 @@
 ## Read Me First
 
-- **This  variant is deprecated.** It takes the oroginally proposed parameters as an input while the JWT validation tool only accepts JWT file as an input.
 - This sample variant uses libraries installed onto the system using `apt` package tool.
 
 ## Prerequisites

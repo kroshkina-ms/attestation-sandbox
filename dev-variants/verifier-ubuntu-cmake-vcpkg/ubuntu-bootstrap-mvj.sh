@@ -19,8 +19,7 @@ function __msg_stage() {
 
 __msg_stage "Install tools"
 
-sudo apt-get update
-#sudo apt install -y make cmake g++ libsgx-dcap-ql libsgx-dcap-ql-dev az-dcap-client open-enclave-hostverify
+sudo apt update && sudo apt -y upgrade
 sudo apt install -y make cmake g++ zip
 
 __msg_stage "Set up development environment and install the dependencies"

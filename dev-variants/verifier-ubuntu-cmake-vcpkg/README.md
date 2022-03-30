@@ -26,7 +26,7 @@ git submodule update --init
 ## Setup Environemnet and Build Main Branch
 
 ```
-cd attesation-sandbox/dev-variants/verifier-ubuntu-cmake-vcpkg
+cd dev-variants/verifier-ubuntu-cmake-vcpkg
 ```
 
 ```

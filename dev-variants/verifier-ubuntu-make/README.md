@@ -36,7 +36,7 @@ sudo apt update
 ```
 
 ```
-sudo apt -y install make g++ gdb libssl-dev libcurl4-openssl-dev libprotobuf10 libsgx-dcap-ql libsgx-dcap-ql-dev az-dcap-client open-enclave-hostverify
+sudo apt -y install make g++ libssl-dev libcurl4-openssl-dev libsgx-dcap-ql libsgx-dcap-ql-dev az-dcap-client open-enclave-hostverify
 ```
 
 > This step also installs the [az-dcap-client](https://github.com/microsoft/azure-dcap-client)

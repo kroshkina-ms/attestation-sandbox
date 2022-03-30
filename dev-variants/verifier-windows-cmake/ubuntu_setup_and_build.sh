@@ -19,8 +19,9 @@ function __msg_stage() {
 
 __msg_stage "Setup Environment"
 
-__msg_stage "Update and Upgrade System"
+__msg_stage "Update and Upgrade System and Repo"
 sudo apt update && sudo apt -y upgrade
+git submodule update --init --recursive
 
 __msg_stage "Configure the Intel and Microsoft APT Repositories"
 # This step and the next one below are based on the Open Enclave's documentation with a few adjustments.
@@ -31,7 +32,7 @@ wget -qO - https://download.01.org/intel-sgx/sgx_repo/ubuntu/intel-sgx-deb.key |
 echo "deb [arch=amd64] https://packages.microsoft.com/ubuntu/18.04/prod bionic main" | sudo tee /etc/apt/sources.list.d/msprod.list
 wget -qO - https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
 
-__msg_stage "Install the Intel and Open Enclave Host-Verify packages and dependencies"
+__msg_stage "Install Essential Tools, Intel and Open Enclave Host-Verify packages and dependencies"
 # This step also installs the az-dcap-client package which is necessary for performing remote attestation in Azure.
 # A general implementation for using Intel DCAP outside the Azure environment is coming soon.
 # https://github.com/microsoft/azure-dcap-client

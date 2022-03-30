@@ -9,12 +9,17 @@
 ## Get Code
 ```
 git clone --recursive git@github.com:kroshkina-ms/attestation-sandbox.git
-cd attestation-sandbox
+```
 
+```
+cd attestation-sandbox
 ```
 
 ```
 git checkout <BRANCH_NAME>
+```
+
+```
 git submodule update --init
 ```
 

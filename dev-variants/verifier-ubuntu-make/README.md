@@ -1,8 +1,7 @@
 ## Read Me First
 
 - **This  variant is deprecated.** It takes the oroginally proposed parameters as an input while the JWT validation tool only accepts JWT file as an input.
-- This sample variant uses libraries installed onto the system using `apt` package tool, instead of `vcpkg` as the main sample.
-- The commands in this document are placed in blocks, so the reader can simply use GitHub's interface to copy the blocks instead of manually selecting, copying, and pasting them.
+- This sample variant uses libraries installed onto the system using `apt` package tool.
 
 ## Prerequisites
 - Dev System with Ubuntu_18.04

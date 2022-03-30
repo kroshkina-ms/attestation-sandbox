@@ -34,14 +34,21 @@ __msg "VCPKG_ROOT is set to $VCPKG_ROOT"
 git submodule update --init --recursive
 
 cd $VCPKG_ROOT
+__msg "Running ./bootstrap-vcpkg.sh"
 ./bootstrap-vcpkg.sh -disableMetrics
+
+__msg "Running ./vcpkg integrate install"
+mkdir -pv ~/.vcpkg
+ls -la ~/.vcpkg
 ./vcpkg integrate install
+
+__msg "Running ./vcpkg install curl[openssl] openssl --triplet x64-linux"
 ./vcpkg install curl[openssl] openssl --triplet x64-linux
 cd $LOCAL_ROOT
 
 __msg_stage "Clean and build MAA JWT validation tool"
 
-JWT_VALIDATOR_SRC_DIR=$LOCAL_ROOT"/dev-variants/verifier-ubuntu-cmake-vcpkg"
+JWT_VALIDATOR_SRC_DIR=$LOCAL_ROOT
 JWT_VALIDATOR_OUT_DIR=$JWT_VALIDATOR_SRC_DIR"/out"
 
 cd $JWT_VALIDATOR_SRC_DIR

@@ -1,7 +1,3 @@
-## Read Me First
-
-- This sample variant uses libraries installed onto the system using `apt` package tool.
-
 ## Prerequisites
 - Dev System with Ubuntu_18.04
 - MAA JWT sample token as an input for the verification

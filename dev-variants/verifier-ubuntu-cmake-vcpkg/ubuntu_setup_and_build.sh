@@ -41,9 +41,6 @@ sudo apt -y install make cmake g++ libssl-dev libcurl4-openssl-dev libsgx-dcap-q
 __msg_stage "Read and execute the content of openenclaverc"
 # This step is needed for pkg-config oehostverify-$(CXX) ... command to function properly.
 echo "source /opt/openenclave/share/openenclave/openenclaverc" >> ~/.bashrc
-# This step is needed for supressing the WARNING (it is not an error, it is a warning!) message:
-# Azure Quote Provider: libdcap_quoteprov.so [ERROR]: Could not retrieve environment variable for 'AZDCAP_DEBUG_LOG_LEVEL'
-echo 'export AZDCAP_DEBUG_LOG_LEVEL=None' >> ~/.bashrc
 source ~/.bashrc
 
 __msg_stage "Build"
@@ -57,4 +54,4 @@ cmake ../
 make
 
 ./jwt-verifier
-
+echo "./jwt-verifier location: $(pwd)"

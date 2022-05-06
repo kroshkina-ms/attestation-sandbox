@@ -1,6 +1,8 @@
 $curdir = Get-Location
 $Env:LOCAL_ROOT=$curdir
 
+Install-Module -Name Invoke-MsBuild
+
 git submodule update --init --recursive
 
 cd $curdir\vcpkg

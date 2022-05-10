@@ -1,4 +1,3 @@
-
 # Define Local Directories
 #
 $cur_dir=Get-Location
@@ -34,36 +33,43 @@ dir $tmp_dir
 $oe_output_directory = "$tmp_dir\oe_installed_nupkg"
 $oe_nuget_args = @('install', $oe_name, '-Source', $tmp_dir, '-OutputDirectory', $oe_output_directory, '-ExcludeVersion')
 $oe_path = "C:\$oe_name"
-$oe_xcopy_args = @('/E', "$oe_output_directory\$oe_name\openenclave", $oe_path)
+$oe_xcopy_args = @('/D', '/Y', '/E', "$oe_output_directory\$oe_name\openenclave", $oe_path)
 & $nuget_exe $oe_nuget_args
 xcopy $oe_xcopy_args
+dir $oe_path
 
 # Download and Install MS Azure DCAP Nuget Packages
 #
-#$msdcap_version = "1.10.0"
-#$msdcap_name = "microsoft.azure.dcap"
-#$msdcap_nupkg_name = "$msdcap_name.$msdcap_version.nupkg"
-#$msdcap_source = "https://www.nuget.org/api/v2/package/Microsoft.Azure.DCAP/$msdcap_version"
-#$msdcap_destination = "$tmp_dir\$msdcap_nupkg_name"
-#Invoke-WebRequest -Uri $msdcap_source -OutFile $msdcap_destination
-#dir $tmp_dir
-#
-#$msdcap_output_directory = "$tmp_dir\msdcap_installed_nupkg"
-#$msdcap_nuget_args = @('install', $msdcap_name, '-Source', $tmp_dir, '-OutputDirectory', $msdcap_output_directory, '-ExcludeVersion')
-#$msdcap_path = 'C:\azure_dcap'
-#& $nuget_exe $msdcap_nuget_args
-##[System.Environment]::SetEnvironmentVariable('NUGET_PACKAGE_PATH',"$msdcap_path\$msdcap_name",[System.EnvironmentVariableTarget]::Machine)
+$msdcap_version = "1.10.0"
+$msdcap_name = "Microsoft.Azure.DCAP"
+$msdcap_nupkg_name = "$msdcap_name.$msdcap_version.nupkg"
+$msdcap_source = "https://www.nuget.org/api/v2/package/Microsoft.Azure.DCAP/$msdcap_version"
+$msdcap_destination = "$tmp_dir\$msdcap_nupkg_name"
+Invoke-WebRequest -Uri $msdcap_source -OutFile $msdcap_destination
+dir $tmp_dir
+
+$msdcap_output_directory = "$tmp_dir\msdcap_installed_nupkg"
+$msdcap_nuget_args = @('install', $msdcap_name, '-Source', $tmp_dir, '-OutputDirectory', $msdcap_output_directory, '-ExcludeVersion')
+$msdcap_path = 'C:\azure_dcap'
+$msdcap_nuget_path = "$msdcap_path\$msdcap_name"
+& $nuget_exe $msdcap_nuget_args
+$msdcap_xcopy_args = @('/d', '/Y', '/E', $msdcap_output_directory, $msdcap_path)
+xcopy $msdcap_xcopy_args
+# Install DCAP nuget
+cd "$msdcap_nuget_path\tools"
+& ".\InstallAzureDCAP.ps1" "$msdcap_nuget_path\build\native\Library"
+dir $msdcap_path
+dir "$msdcap_nuget_path\build\native\Library"
 
 # Build and Install vcpkg Dependencies
 #
 #cd $cur_dir\vcpkg
-$vcpkg_dir="..\..\vcpkg"
+$vcpkg_dir="$cur_dir\..\..\vcpkg"
 
 cd $vcpkg_dir
 .\bootstrap-vcpkg.bat
 .\vcpkg.exe integrate install
 .\vcpkg.exe install curl[openssl] openssl --triplet x64-windows
-#.\vcpkg.exe install curl[openssl] zlib openssl --triplet x64-windows
 
 $project_dir="$cur_dir"
 
@@ -77,20 +83,20 @@ New-Item -ItemType Directory -Force -Path $project_out
 
 cd $project_out 
 
-cmake -DCMAKE_PREFIX_PATH="$oe_path\lib\openenclave\cmake" $project_dir
-#cmake -DCMAKE_PREFIX_PATH="$oe_path\lib\openenclave\cmake" -DNUGET_PACKAGE_PATH="$msdcap_path\$msdcap_name" $project_dir
+cmake -DCMAKE_PREFIX_PATH="$oe_path\lib\openenclave\cmake" -DCMAKE_TOOLCHAIN_FILE="$vcpkg_dir/scripts/buildsystems/vcpkg.cmake" -DNUGET_PACKAGE_PATH="$msdcap_nuget_path" $project_dir
 
 $msbuild_path=$Args[0]
-
+$msbuild_exe=""
 If($msbuild_path -eq $null) {
     $msbuild_file_name = (Get-ChildItem -Recurse -Path "C:\Program Files (x86)\Microsoft Visual Studio\" -Include "msbuild.exe").fullname | Select -First 1
     $msbuild_path = Split-Path -Path "$msbuild_file_name"
+    $msbuild_exe = (Get-ChildItem -Recurse -Path "C:\Program Files (x86)\Microsoft Visual Studio\" -Include "msbuild.exe").fullname | Select -First 1
 }
 
-echo ">>> Temporary adding '$msbuild_path' to the PATH"
-
-Set-Item -Path Env:Path -Value ($Env:Path + $msbuild_path)
-msbuild jwt-verifier.sln
+#TODO fixme
+#echo ">>> Temporary adding '$msbuild_path' to the PATH"
+#Set-Item -Path Env:Path -Value ($Env:Path + $msbuild_path)
+& $msbuild_exe jwt-verifier.sln
 
 cd .\Debug
 .\jwt-verifier.exe

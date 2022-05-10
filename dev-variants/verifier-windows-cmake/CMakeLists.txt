@@ -48,13 +48,17 @@ set(OPENSSL_USE_STATIC_LIBS TRUE)
 
 find_package(OpenEnclave CONFIG REQUIRED)
 find_package(OpenSSL REQUIRED)
-
+find_package(CURL CONFIG REQUIRED)
 
 add_executable(jwt-verifier ${SOURCES} ${HEADERS})
 
 target_link_libraries(jwt-verifier PRIVATE openenclave::oehostverify)
 target_link_libraries(jwt-verifier PRIVATE OpenSSL::SSL OpenSSL::Crypto)
-target_link_libraries(jwt-verifier PRIVATE curl)
+if(WINDOWS)
+    target_link_libraries(jwt-verifier PRIVATE CURL::libcurl)
+elseif(LINUX)
+    target_link_libraries(jwt-verifier PRIVATE curl)
+endif()
 target_include_directories(jwt-verifier PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 if(WINDOWS)

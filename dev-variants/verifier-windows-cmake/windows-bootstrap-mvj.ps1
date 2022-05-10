@@ -2,7 +2,8 @@
 # Define Local Directories
 #
 $cur_dir=Get-Location
-$Env:LOCAL_ROOT=$cur_dir
+# TODO fix the local dir
+$Env:LOCAL_ROOT="$cur_dir\..\.."
 $tmp_dir = "$cur_dir\tmp"
 If((Test-Path $tmp_dir))
 {
@@ -85,8 +86,8 @@ If($msbuild_path -eq $null) {
 echo ">>> Temporary adding '$msbuild_path' to the PATH"
 
 Set-Item -Path Env:Path -Value ($Env:Path + $msbuild_path)
-msbuild maa-validate-jwt.sln
+msbuild jwt-verifier.sln
 
 cd .\Debug
-.\maa-validate-jwt.exe
+.\jwt-verifier.exe
 cd $cur_dir

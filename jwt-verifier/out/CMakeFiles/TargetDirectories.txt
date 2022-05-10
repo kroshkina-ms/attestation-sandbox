@@ -1,0 +1,3 @@
+C:/Users/olkroshk/attestation-sandbox/dev-variants/verifier-windows-cmake/out/CMakeFiles/jwt-verifier.dir
+C:/Users/olkroshk/attestation-sandbox/dev-variants/verifier-windows-cmake/out/CMakeFiles/ALL_BUILD.dir
+C:/Users/olkroshk/attestation-sandbox/dev-variants/verifier-windows-cmake/out/CMakeFiles/ZERO_CHECK.dir

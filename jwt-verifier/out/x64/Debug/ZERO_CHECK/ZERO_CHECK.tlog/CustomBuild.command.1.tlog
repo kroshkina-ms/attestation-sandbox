@@ -1,0 +1,10 @@
+^C:\USERS\OLKROSHK\ATTESTATION-SANDBOX\DEV-VARIANTS\VERIFIER-WINDOWS-CMAKE\OUT\CMAKEFILES\A93574808701A3719AA4A471F4FE66CF\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/olkroshk/attestation-sandbox/dev-variants/verifier-windows-cmake -BC:/Users/olkroshk/attestation-sandbox/dev-variants/verifier-windows-cmake/out --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/Users/olkroshk/attestation-sandbox/dev-variants/verifier-windows-cmake/out/jwt-verifier.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

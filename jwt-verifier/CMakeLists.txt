@@ -45,7 +45,10 @@ set(HEADERS
 )
 
 set(OPENSSL_USE_STATIC_LIBS TRUE)
-
+#ADD_DEFINITIONS(-DNODEFAULTLIB:msvcrtd.lib)
+set( CMAKE_SHARED_LINKER_FLAGS ${CMAKE_SHARED_LINKER_FLAGS} "/NODEFAULTLIB:libcmt.lib /NODEFAULTLIB:libcmtd.lib /NODEFAULTLIB:msvcrt.lib")
+#set( CMAKE_SHARED_LINKER_FLAGS ${CMAKE_SHARED_LINKER_FLAGS} "/NODEFAULTLIBS:library")
+ 
 find_package(OpenEnclave CONFIG REQUIRED)
 find_package(OpenSSL REQUIRED)
 find_package(CURL CONFIG REQUIRED)
@@ -54,16 +57,14 @@ add_executable(jwt-verifier ${SOURCES} ${HEADERS})
 
 target_link_libraries(jwt-verifier PRIVATE openenclave::oehostverify)
 target_link_libraries(jwt-verifier PRIVATE OpenSSL::SSL OpenSSL::Crypto)
-if(WINDOWS)
-    target_link_libraries(jwt-verifier PRIVATE CURL::libcurl)
-elseif(LINUX)
-    target_link_libraries(jwt-verifier PRIVATE curl)
-endif()
-target_include_directories(jwt-verifier PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 if(WINDOWS)
+    target_link_libraries(jwt-verifier PRIVATE CURL::libcurl)
+    target_include_directories(jwt-verifier PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
     set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT jwt-verifier)
     target_compile_options(jwt-verifier PRIVATE /W4 /WX)
 elseif(LINUX)
+    target_link_libraries(jwt-verifier PRIVATE curl)
+    target_include_directories(jwt-verifier PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
     target_compile_options(jwt-verifier PRIVATE -Wall -Wextra -pedantic -Werror)
 endif()
